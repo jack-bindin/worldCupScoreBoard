@@ -19,21 +19,21 @@ public class FootballScoreBoardApplication {
             String command = scanner.nextLine().trim();
 
             switch (command) {
-                case "start":
+                case "start" -> {
                     System.out.println("Enter home team: ");
                     String homeTeam = scanner.nextLine().trim();
                     System.out.println("Enter away team: ");
                     String awayTeam = scanner.nextLine().trim();
                     int matchId = scoreBoardService.startGame(homeTeam, awayTeam);
                     System.out.println("Started a new game with ID: " + matchId);
-                    break;
-                case "finish":
+                }
+                case "finish" -> {
                     System.out.println("Enter match ID to finish: ");
                     int finishMatchId = Integer.parseInt(scanner.nextLine().trim());
                     scoreBoardService.finishGame(finishMatchId);
                     System.out.println("Match with ID " + finishMatchId + " finished");
-                    break;
-                case "update":
+                }
+                case "update" -> {
                     System.out.println("Enter match ID to update score: ");
                     int updateMatchId = Integer.parseInt(scanner.nextLine().trim());
                     System.out.println("Enter home score: ");
@@ -42,20 +42,20 @@ public class FootballScoreBoardApplication {
                     int awayScore = Integer.parseInt(scanner.nextLine().trim());
                     scoreBoardService.updateScore(updateMatchId, homeScore, awayScore);
                     System.out.println("Score updated for match ID " + updateMatchId);
-                    break;
-                case "summary":
+                }
+                case "summary" -> {
                     System.out.println("Summary of Matches:");
                     for (Match match : scoreBoardService.getSummaryOfMatches()) {
-                        System.out.println(match.getHomeTeam() + " " + match.getHomeScore() + " - " + match.getAwayTeam() + " " + match.getAwayScore());
+                        System.out.println(match.getHomeTeam() + " " + match.getHomeScore() + " - "
+                                + match.getAwayTeam() + " " + match.getAwayScore());
                     }
-                    break;
-                case "exit":
+                }
+                case "exit" -> {
                     System.out.println("Exiting program.");
                     scanner.close();
                     System.exit(0);
-                    break;
-                default:
-                    System.out.println("Invalid command. Please try again.");
+                }
+                default -> System.out.println("Invalid command. Please try again.");
             }
         }
     }
