@@ -12,4 +12,14 @@ public class Match {
     int awayScore;
     LocalDateTime startTime;
     boolean finished;
+
+    public Match(int matchId, String homeTeam, String awayTeam) {
+        this.matchId = matchId;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.startTime = LocalDateTime.now();
+        this.finished = false;
+        this.homeScore = 0;
+        this.awayScore = 0;
+    }
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,6 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ScoreBoardServiceTest {
 
     private ScoreBoardServiceImpl uut;
+
+    @BeforeEach
+    void setup() {
+        uut = new ScoreBoardServiceImpl();
+    }
 
     @Test
     void should_start_first_game_and_return_id_1_for_only_match() {
@@ -39,7 +45,7 @@ public class ScoreBoardServiceTest {
         // given
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "ARGENTINA"), "Match cannot contain 2 of the same team");
+        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "ARGENTINA"), "Home team and away team have the same name");
     }
 
     @Test
