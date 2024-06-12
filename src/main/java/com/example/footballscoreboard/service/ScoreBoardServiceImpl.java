@@ -43,7 +43,9 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
 
         gameList.sort(Comparator.comparing(Match::getStartTime));
 
-        return gameList;
+        return gameList.stream()
+                .filter(match -> !match.isFinished())
+                .toList();
     }
 
     public List<Match> getGameList() {
@@ -69,6 +71,7 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
             throw new IllegalStateException(ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
         }
         if (getGameList().stream()
+                .filter(match -> !match.isFinished())
                 .anyMatch(match -> match.getHomeTeam().equals(homeTeam)
                         || match.getHomeTeam().equals(awayTeam)
                         || match.getAwayTeam().equals(homeTeam)

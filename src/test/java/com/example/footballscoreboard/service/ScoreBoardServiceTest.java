@@ -61,6 +61,16 @@ public class ScoreBoardServiceTest {
     }
 
     @Test
+    void should_start_game_if_team_has_finished_their_previous_match() {
+        // given
+        uut.startGame("ARGENTINA", "BRAZIL");
+        uut.finishGame(1);
+        // when
+        // then
+        assertEquals(2, uut.startGame("ARGENTINA", "BRAZIL"));
+    }
+
+    @Test
     void should_finish_game_when_correct_match_id_provided() {
         // given
         uut.startGame("ARGENTINA", "BRAZIL");
@@ -68,7 +78,7 @@ public class ScoreBoardServiceTest {
         // when
         uut.finishGame(1);
         // then
-        assertEquals(uut.getSummaryOfMatches().get(1).getMatchId(), 2);
+        assertEquals(uut.getSummaryOfMatches().get(0).getMatchId(), 2);
     }
 
     @Test
