@@ -9,7 +9,9 @@ public class Match {
     int matchId;
     String homeTeam;
     String awayTeam;
+    @Setter
     int homeScore;
+    @Setter
     int awayScore;
     LocalDateTime startTime;
     @Setter

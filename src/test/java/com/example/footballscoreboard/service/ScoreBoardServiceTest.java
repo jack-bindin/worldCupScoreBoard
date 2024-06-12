@@ -87,9 +87,9 @@ public class ScoreBoardServiceTest {
         // when
         uut.updateScore(2, 1, 0);
         // then
-        var uneditedGame1 = uut.getSummaryOfMatches().get(1);
-        var uneditedGame2 = uut.getSummaryOfMatches().get(3);
-        var updatedGame = uut.getSummaryOfMatches().get(2);
+        var uneditedGame1 = uut.getSummaryOfMatches().get(0);
+        var uneditedGame2 = uut.getSummaryOfMatches().get(2);
+        var updatedGame = uut.getSummaryOfMatches().get(1);
         assertAll(
                 () -> assertEquals(updatedGame.getHomeTeam(), "GERMANY"),
                 () -> assertEquals(updatedGame.getAwayTeam(), "SPAIN"),
@@ -99,7 +99,7 @@ public class ScoreBoardServiceTest {
                 () -> assertEquals(uneditedGame1.getAwayTeam(), "BRAZIL"),
                 () -> assertEquals(uneditedGame1.getHomeScore(), 0),
                 () -> assertEquals(uneditedGame1.getAwayScore(), 0),
-                () -> assertEquals(uneditedGame2.getHomeTeam(), "SPAIN"),
+                () -> assertEquals(uneditedGame2.getHomeTeam(), "ITALY"),
                 () -> assertEquals(uneditedGame2.getAwayTeam(), "CANADA"),
                 () -> assertEquals(uneditedGame2.getHomeScore(), 0),
                 () -> assertEquals(uneditedGame2.getAwayScore(), 0)
@@ -113,6 +113,17 @@ public class ScoreBoardServiceTest {
         // when
         // then
         assertThrows(IllegalStateException.class, () -> uut.updateScore(2, 1, 0), "Match id does not exist");
+
+    }
+
+    @Test
+    void should_throw_if_trying_to_update_match_that_is_already_finished() {
+        // given
+        uut.startGame("ARGENTINA", "BRAZIL");
+        uut.finishGame(1);
+        // when
+        // then
+        assertThrows(IllegalStateException.class, () -> uut.updateScore(1, 1, 0), "Match already finished");
 
     }
 

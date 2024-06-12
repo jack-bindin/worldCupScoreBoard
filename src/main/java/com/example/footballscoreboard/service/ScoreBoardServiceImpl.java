@@ -16,29 +16,39 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
 
     @Override
     public synchronized void finishGame(int matchId) {
+        Match matchToUpdate = getMatchById(matchId);
 
-        for (Match match : getSummaryOfMatches()) {
-            if (match.getMatchId() == matchId) {
-                if (match.isFinished()) {
-                    throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
-                } else {
-                    match.setFinished(true);
-                    return;
-                }
-            }
+        if (matchToUpdate.isFinished()) {
+            throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
         }
 
-        throw new IllegalStateException(ScoreBoardException.MATCH_DOES_NOT_EXIST.getErrorMessage());
+        matchToUpdate.setFinished(true);
     }
 
     @Override
     public synchronized void updateScore(int matchId, int homeScore, int awayScore) {
+        Match matchToUpdate = getMatchById(matchId);
 
+        if (matchToUpdate.isFinished()) {
+            throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
+        }
+
+        validateAndUpdateScore(matchToUpdate, homeScore, awayScore);
     }
 
     @Override
     public List<Match> getSummaryOfMatches() {
         return gameList;
+    }
+
+    private Match getMatchById(int matchId) {
+        for (Match match : getSummaryOfMatches()) {
+            if (match.getMatchId() == matchId) {
+                return match;
+            }
+        }
+
+        throw new IllegalStateException(ScoreBoardException.MATCH_DOES_NOT_EXIST.getErrorMessage());
     }
 
     private void validateStartingTeams(String homeTeam, String awayTeam) {
@@ -58,5 +68,17 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
         int matchId = getSummaryOfMatches().size() + 1;
         getSummaryOfMatches().add(new Match(matchId, homeTeam, awayTeam));
         return matchId;
+    }
+
+    private void validateAndUpdateScore(Match match, int homeScore, int awayScore) {
+        if(homeScore < match.getHomeScore()
+                || homeScore > match.getHomeScore()+1
+                || awayScore < match.getAwayScore()
+                || awayScore > match.getAwayScore()+1) {
+            throw new IllegalStateException(ScoreBoardException.INVALID_SCORE.getErrorMessage());
+        }
+
+        match.setHomeScore(homeScore);
+        match.setAwayScore(awayScore);
     }
 }
