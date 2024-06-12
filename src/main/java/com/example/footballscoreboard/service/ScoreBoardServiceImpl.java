@@ -48,11 +48,11 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
                 .toList();
     }
 
-    public List<Match> getGameList() {
+    private List<Match> getGameList() {
         return gameList;
     }
 
-    public void addToGameList(Match match) {
+    void addToGameList(Match match) {
         gameList.add(match);
     }
 

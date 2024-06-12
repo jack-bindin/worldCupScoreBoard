@@ -92,6 +92,16 @@ public class ScoreBoardServiceTest {
     }
 
     @Test
+    void should_throw_if_match_already_finished_when_trying_to_end_game() {
+        // given
+        uut.startGame("ARGENTINA", "BRAZIL");
+        uut.finishGame(1);
+        // when
+        // then
+        assertThrows(IllegalStateException.class, () -> uut.finishGame(1), "Match has already finished");
+    }
+
+    @Test
     void should_update_score_of_match() {
         // given
         uut.startGame("ARGENTINA", "BRAZIL");
