@@ -36,7 +36,7 @@ public class ScoreBoardServiceTest {
     @Test
     void should_return_match_id_2_if_starting_game_when_one_already_in_progress() {
         // given
-        uut.startGame("ARGENTINA","BRAZIL");
+        uut.startGame("ARGENTINA", "BRAZIL");
         // when
         var result = uut.startGame("FRANCE", "CANADA");
         // then
@@ -48,7 +48,8 @@ public class ScoreBoardServiceTest {
         // given
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "ARGENTINA"), "Home team and away team have the same name");
+        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "ARGENTINA"),
+                "Home team and away team have the same name");
     }
 
     @Test
@@ -57,7 +58,8 @@ public class ScoreBoardServiceTest {
         uut.startGame("ARGENTINA", "BRAZIL");
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "URUGUAY"), "Team already has match in progress");
+        assertThrows(IllegalStateException.class, () -> uut.startGame("ARGENTINA", "URUGUAY"),
+                "Team already has match in progress");
     }
 
     @Test
@@ -88,7 +90,8 @@ public class ScoreBoardServiceTest {
         uut.startGame("ITALY", "AUSTRALIA");
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.finishGame(5), "Match id does not exist");
+        assertThrows(IllegalStateException.class, () -> uut.finishGame(5),
+                "Match id does not exist");
     }
 
     @Test
@@ -98,7 +101,8 @@ public class ScoreBoardServiceTest {
         uut.finishGame(1);
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.finishGame(1), "Match has already finished");
+        assertThrows(IllegalStateException.class, () -> uut.finishGame(1),
+                "Match has already finished");
     }
 
     @Test
@@ -135,7 +139,8 @@ public class ScoreBoardServiceTest {
         uut.startGame("ARGENTINA", "BRAZIL");
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.updateScore(2, 1, 0), "Match id does not exist");
+        assertThrows(IllegalStateException.class, () -> uut.updateScore(2, 1, 0),
+                "Match id does not exist");
 
     }
 
@@ -146,7 +151,8 @@ public class ScoreBoardServiceTest {
         uut.finishGame(1);
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.updateScore(1, 1, 0), "Match already finished");
+        assertThrows(IllegalStateException.class, () -> uut.updateScore(1, 1, 0),
+                "Match already finished");
 
     }
 
@@ -157,13 +163,15 @@ public class ScoreBoardServiceTest {
             "1,2"
     })
         // I know we have VAR now so scores can be removed, but wanted to add just in case
-    void should_throw_if_trying_to_decrease_score_or_add_more_than_plus_one_score_for_either_team(int homeScore, int awayScore) {
+    void should_throw_if_trying_to_decrease_score_or_add_more_than_plus_one_score_for_either_team(
+            int homeScore, int awayScore) {
         // given
         uut.startGame("ARGENTINA", "BRAZIL");
         uut.updateScore(1, 1, 0);
         // when
         // then
-        assertThrows(IllegalStateException.class, () -> uut.updateScore(1, homeScore, awayScore), "Invalid score");
+        assertThrows(IllegalStateException.class, () -> uut.updateScore(1, homeScore, awayScore),
+                "Invalid score");
 
     }
 

@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScoreBoardServiceImpl implements ScoreBoardService {
+
     private List<Match> gameList = new CopyOnWriteArrayList<>();
+
     @Override
     public synchronized int startGame(String homeTeam, String awayTeam) {
         validateStartingTeams(homeTeam, awayTeam);
@@ -20,7 +22,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
         Match matchToUpdate = getMatchById(matchId);
 
         if (matchToUpdate.isFinished()) {
-            throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
+            throw new IllegalStateException(
+                    ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
         }
 
         matchToUpdate.setFinished(true);
@@ -31,7 +34,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
         Match matchToUpdate = getMatchById(matchId);
 
         if (matchToUpdate.isFinished()) {
-            throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
+            throw new IllegalStateException(
+                    ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
         }
 
         validateAndUpdateScore(matchToUpdate, homeScore, awayScore);
@@ -67,8 +71,9 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     private void validateStartingTeams(String homeTeam, String awayTeam) {
-        if(homeTeam.equals(awayTeam)) {
-            throw new IllegalStateException(ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
+        if (homeTeam.equals(awayTeam)) {
+            throw new IllegalStateException(
+                    ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
         }
         if (getGameList().stream()
                 .filter(match -> !match.isFinished())
@@ -76,7 +81,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
                         || match.getHomeTeam().equals(awayTeam)
                         || match.getAwayTeam().equals(homeTeam)
                         || match.getAwayTeam().equals(awayTeam))) {
-            throw new IllegalStateException(ScoreBoardException.TEAM_ALREADY_EXISTS_IN_ONGOING_MATCH.getErrorMessage());
+            throw new IllegalStateException(
+                    ScoreBoardException.TEAM_ALREADY_EXISTS_IN_ONGOING_MATCH.getErrorMessage());
         }
     }
 
@@ -87,10 +93,10 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     private void validateAndUpdateScore(Match match, int homeScore, int awayScore) {
-        if(homeScore < match.getHomeScore()
-                || homeScore > match.getHomeScore()+1
+        if (homeScore < match.getHomeScore()
+                || homeScore > match.getHomeScore() + 1
                 || awayScore < match.getAwayScore()
-                || awayScore > match.getAwayScore()+1) {
+                || awayScore > match.getAwayScore() + 1) {
             throw new IllegalStateException(ScoreBoardException.INVALID_SCORE.getErrorMessage());
         }
 

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 @Getter
 public class Match {
+
     int matchId;
     String homeTeam;
     String awayTeam;
