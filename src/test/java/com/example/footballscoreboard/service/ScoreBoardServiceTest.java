@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.example.footballscoreboard.model.Match;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -154,5 +157,29 @@ public class ScoreBoardServiceTest {
         // when
         // then
         assertThat(uut.getSummaryOfMatches()).hasSize(3);
+    }
+
+    @Test
+    void should_get_summary_of_matches_sorted_by_time() {
+        ScoreBoardServiceImpl scoreBoardService = new ScoreBoardServiceImpl();
+
+        Match match1 = new Match(1, "ARGENTINA", "BRAZIL");
+        match1.setStartTime(LocalDateTime.now().minusHours(2));  // Earlier start time
+        Match match2 = new Match(2, "GERMANY", "AUSTRALIA");
+        match2.setStartTime(LocalDateTime.now().plusHours(1));  // Later start time
+        Match match3 = new Match(3, "FRANCE", "MEXICO");
+        match3.setStartTime(LocalDateTime.now());
+
+        scoreBoardService.addToGameList(match2);
+        scoreBoardService.addToGameList(match3);
+        scoreBoardService.addToGameList(match1);
+
+        List<Match> sortedMatches = scoreBoardService.getSummaryOfMatches();
+
+        assertAll(
+                () -> assertEquals(sortedMatches.get(0).getMatchId(), 1),
+                () -> assertEquals(sortedMatches.get(1).getMatchId(), 3),
+                () -> assertEquals(sortedMatches.get(2).getMatchId(), 2)
+        );
     }
 }

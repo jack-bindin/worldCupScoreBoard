@@ -2,6 +2,7 @@ package com.example.footballscoreboard.service;
 
 import com.example.footballscoreboard.ScoreBoardException;
 import com.example.footballscoreboard.model.Match;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -38,11 +39,23 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
 
     @Override
     public List<Match> getSummaryOfMatches() {
+        List<Match> gameList = getGameList();
+
+        gameList.sort(Comparator.comparing(Match::getStartTime));
+
         return gameList;
     }
 
+    public List<Match> getGameList() {
+        return gameList;
+    }
+
+    public void addToGameList(Match match) {
+        gameList.add(match);
+    }
+
     private Match getMatchById(int matchId) {
-        for (Match match : getSummaryOfMatches()) {
+        for (Match match : getGameList()) {
             if (match.getMatchId() == matchId) {
                 return match;
             }
@@ -55,7 +68,7 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
         if(homeTeam.equals(awayTeam)) {
             throw new IllegalStateException(ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
         }
-        if (getSummaryOfMatches().stream()
+        if (getGameList().stream()
                 .anyMatch(match -> match.getHomeTeam().equals(homeTeam)
                         || match.getHomeTeam().equals(awayTeam)
                         || match.getAwayTeam().equals(homeTeam)
@@ -65,8 +78,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     private int addMatchToScoreBoard(String homeTeam, String awayTeam) {
-        int matchId = getSummaryOfMatches().size() + 1;
-        getSummaryOfMatches().add(new Match(matchId, homeTeam, awayTeam));
+        int matchId = getGameList().size() + 1;
+        addToGameList(new Match(matchId, homeTeam, awayTeam));
         return matchId;
     }
 

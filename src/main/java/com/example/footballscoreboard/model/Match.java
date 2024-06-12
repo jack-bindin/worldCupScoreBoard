@@ -13,6 +13,7 @@ public class Match {
     int homeScore;
     @Setter
     int awayScore;
+    @Setter
     LocalDateTime startTime;
     @Setter
     boolean finished;
