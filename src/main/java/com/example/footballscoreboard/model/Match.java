@@ -2,6 +2,7 @@ package com.example.footballscoreboard.model;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Match {
@@ -11,6 +12,7 @@ public class Match {
     int homeScore;
     int awayScore;
     LocalDateTime startTime;
+    @Setter
     boolean finished;
 
     public Match(int matchId, String homeTeam, String awayTeam) {

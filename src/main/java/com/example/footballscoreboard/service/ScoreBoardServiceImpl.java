@@ -17,6 +17,18 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     @Override
     public synchronized void finishGame(int matchId) {
 
+        for (Match match : getSummaryOfMatches()) {
+            if (match.getMatchId() == matchId) {
+                if (match.isFinished()) {
+                    throw new IllegalStateException(ScoreBoardException.MATCH_ALREADY_FINISHED.getErrorMessage());
+                } else {
+                    match.setFinished(true);
+                    return;
+                }
+            }
+        }
+
+        throw new IllegalStateException(ScoreBoardException.MATCH_DOES_NOT_EXIST.getErrorMessage());
     }
 
     @Override
@@ -26,14 +38,14 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
 
     @Override
     public List<Match> getSummaryOfMatches() {
-        return null;
+        return gameList;
     }
 
     private void validateStartingTeams(String homeTeam, String awayTeam) {
         if(homeTeam.equals(awayTeam)) {
             throw new IllegalStateException(ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
         }
-        if (gameList.stream()
+        if (getSummaryOfMatches().stream()
                 .anyMatch(match -> match.getHomeTeam().equals(homeTeam)
                         || match.getHomeTeam().equals(awayTeam)
                         || match.getAwayTeam().equals(homeTeam)
@@ -43,8 +55,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     private int addMatchToScoreBoard(String homeTeam, String awayTeam) {
-        int matchId = gameList.size() + 1;
-        gameList.add(new Match(matchId, homeTeam, awayTeam));
+        int matchId = getSummaryOfMatches().size() + 1;
+        getSummaryOfMatches().add(new Match(matchId, homeTeam, awayTeam));
         return matchId;
     }
 }
