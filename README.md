@@ -10,7 +10,8 @@ update - Updates the score of a game by inputting the match id, home score and a
 summary - Returns a list of actuve games. 
 
 **Important to note: 
-- I have added some multi thread safety into the service class so that the scoreboard should stay consistent in the event of concurrency. 
+- I have added some multi thread safety into the service class so that the scoreboard should stay consistent in the event of concurrency.
+- The use of CopyOnWriteArrayList ia expensive and could be replaced with something else, especially when a database is added to contain the scores. But wanted to show scalability in this scenario
 - I have made it so that the scores can ony go up by one each update. I know VAR may take scores away, but I wanted to show another layer of validation that can be removed upon request. 
 
 **Features I would add in the future:
