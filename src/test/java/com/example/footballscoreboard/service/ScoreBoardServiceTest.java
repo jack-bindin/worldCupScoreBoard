@@ -198,9 +198,9 @@ public class ScoreBoardServiceTest {
         Match match3 = new Match(3, "FRANCE", "MEXICO");
         match3.setStartTime(LocalDateTime.now());
 
-        scoreBoardService.addToGameList(match2);
-        scoreBoardService.addToGameList(match3);
-        scoreBoardService.addToGameList(match1);
+        scoreBoardService.addToGameList(1, match2);
+        scoreBoardService.addToGameList(2, match3);
+        scoreBoardService.addToGameList(3, match1);
 
         List<Match> sortedMatches = scoreBoardService.getSummaryOfMatches();
 

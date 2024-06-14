@@ -4,11 +4,12 @@ import com.example.footballscoreboard.ScoreBoardException;
 import com.example.footballscoreboard.model.Match;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreBoardServiceImpl implements ScoreBoardService {
 
-    private List<Match> gameList = new CopyOnWriteArrayList<>();
+    private final Map<Integer, Match> gameMap = new ConcurrentHashMap<>();
 
     @Override
     public synchronized int startGame(String homeTeam, String awayTeam) {
@@ -43,31 +44,25 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
 
     @Override
     public List<Match> getSummaryOfMatches() {
-        List<Match> gameList = getGameList();
-
-        gameList.sort(Comparator.comparing(Match::getStartTime));
-
-        return gameList.stream()
+        return getGameMap().values().stream()
                 .filter(match -> !match.isFinished())
+                .sorted(Comparator.comparing(Match::getStartTime))
                 .toList();
     }
 
-    private List<Match> getGameList() {
-        return gameList;
+    private Map<Integer, Match> getGameMap() {
+        return gameMap;
     }
 
-    void addToGameList(Match match) {
-        gameList.add(match);
+    void addToGameList(int matchId, Match match) {
+        gameMap.put(matchId, match);
     }
 
     private Match getMatchById(int matchId) {
-        for (Match match : getGameList()) {
-            if (match.getMatchId() == matchId) {
-                return match;
-            }
-        }
-
-        throw new IllegalStateException(ScoreBoardException.MATCH_DOES_NOT_EXIST.getErrorMessage());
+        return getGameMap().computeIfAbsent(matchId, key -> {
+            throw new IllegalStateException(
+                    ScoreBoardException.MATCH_DOES_NOT_EXIST.getErrorMessage());
+        });
     }
 
     private void validateStartingTeams(String homeTeam, String awayTeam) {
@@ -75,7 +70,7 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
             throw new IllegalStateException(
                     ScoreBoardException.HOME_TEAM_AND_AWAY_TEAM_ARE_THE_SAME.getErrorMessage());
         }
-        if (getGameList().stream()
+        if (getGameMap().values().stream()
                 .filter(match -> !match.isFinished())
                 .anyMatch(match -> match.getHomeTeam().equals(homeTeam)
                         || match.getHomeTeam().equals(awayTeam)
@@ -87,8 +82,8 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     private int addMatchToScoreBoard(String homeTeam, String awayTeam) {
-        int matchId = getGameList().size() + 1;
-        addToGameList(new Match(matchId, homeTeam, awayTeam));
+        int matchId = getGameMap().size() + 1;
+        addToGameList(matchId, new Match(matchId, homeTeam, awayTeam));
         return matchId;
     }
 
